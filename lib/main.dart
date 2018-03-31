@@ -107,6 +107,9 @@ class _MyHomePageState extends State<MyHomePage> {
             new ListTile(
               title: new Text('Bills'),
             ),
+            new ListTile(
+              title: new Text('Settings'),
+            ),
           ],
         ),
       ),// This trailing comma makes auto-formatting nicer for build methods.
