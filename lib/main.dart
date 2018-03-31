@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monai/configs/general_configs.dart';
+import 'package:monai/screens/new_transaction_screen.dart';
 
 void main() => runApp(new MyApp());
 
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: new MyHomePage(title: APP_NAME),
+      routes: {
+        "/new_transaction": (context) => new NewTransactionScreen()
+      },
     );
   }
 }
@@ -44,18 +48,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,19 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
-            ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+          children: <Widget>[],
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () { Navigator.of(context).pushNamed("/new_transaction"); },
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ),
