@@ -6,5 +6,5 @@ class Transaction {
   DateTime dateTime;
   String note;
   double amount;
-  Category category;
+  TransactionCategory category;
 }
