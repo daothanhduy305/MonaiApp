@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monai/configs/general_configs.dart';
+import 'package:monai/screens/account_manager_screen.dart';
 import 'package:monai/screens/new_transaction_screen.dart';
 
 void main() => runApp(new MyApp());
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
       ),
       home: new MyHomePage(title: APP_NAME),
       routes: {
-        "/new_transaction": (context) => new NewTransactionScreen()
+        "/new_transaction": (context) => new NewTransactionScreen(),
+        "/account_manager": (context) => new AccountManagerScreen(),
       },
     );
   }
@@ -48,7 +50,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -61,7 +62,21 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: new Text(widget.title),
+        title: new ListTile(
+          leading: new Icon(
+            Icons.arrow_drop_down,
+            color: Colors.white,
+          ),
+          title: new Text(
+            // TODO: For now this is the app title
+            // In the future, this should be the amount of the current viewing account
+            widget.title,
+            style: new TextStyle(color: Colors.white, fontSize: 18.0),
+          ),
+          onTap: () {
+            Navigator.of(context).pushNamed("/account_manager");
+          },
+        ),
       ),
       body: new Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -85,7 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: new FloatingActionButton(
-        onPressed: () { Navigator.of(context).pushNamed("/new_transaction"); },
+        onPressed: () {
+          Navigator.of(context).pushNamed("/new_transaction");
+        },
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ),
@@ -112,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-      ),// This trailing comma makes auto-formatting nicer for build methods.
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
