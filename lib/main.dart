@@ -104,7 +104,28 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: new Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      drawer: new Drawer(
+        child: new ListView(
+          children: <Widget>[
+            new ListTile(
+              title: new Text('Transactions'),
+            ),
+            new ListTile(
+              title: new Text('Debts'),
+            ),
+            new ListTile(
+              title: new Text('Budgets'),
+            ),
+            new ListTile(
+              title: new Text('Savings'),
+            ),
+            new ListTile(
+              title: new Text('Bills'),
+            ),
+          ],
+        ),
+      ),// This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
