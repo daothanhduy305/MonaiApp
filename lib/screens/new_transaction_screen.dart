@@ -36,6 +36,14 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
               title: new TextField(
                 keyboardType: TextInputType.number,
                 decoration: new InputDecoration(
+                    hintText: 'Currency'
+                ),
+              ),
+            ),
+            new ListTile(
+              title: new TextField(
+                keyboardType: TextInputType.number,
+                decoration: new InputDecoration(
                     hintText: 'Category'
                 ),
               ),
