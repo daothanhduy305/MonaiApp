@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monai/configs/general_configs.dart';
 import 'package:monai/screens/account_manager_screen.dart';
+import 'package:monai/screens/new_account_screen.dart';
 import 'package:monai/screens/new_transaction_screen.dart';
 
 void main() => runApp(new MyApp());
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/new_transaction": (context) => new NewTransactionScreen(),
         "/account_manager": (context) => new AccountManagerScreen(),
+        "/new_account": (context) => new NewAccountScreen(),
       },
     );
   }

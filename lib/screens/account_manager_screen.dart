@@ -14,9 +14,7 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
     ),
     floatingActionButton: new FloatingActionButton(
       child: new Icon(Icons.add),
-      onPressed: () {
-
-      },
+      onPressed: () { Navigator.of(context).pushNamed("/new_account"); },
     ),
   );
 
