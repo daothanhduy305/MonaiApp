@@ -101,7 +101,7 @@ class TransactionCategoryProvider {
     return maps.length > 0 ? new TransactionCategory.fromMap(maps.first) : null;
   }
 
-  Future<List<TransactionCategory>> getAllNoteData() async {
+  Future<List<TransactionCategory>> getAllCategories() async {
     await open();
     List<Map> maps = await database.query(
       transactionCategoryTableName,
@@ -171,7 +171,7 @@ class AccountCategoryProvider {
     return maps.length > 0 ? new AccountCategory.fromMap(maps.first) : null;
   }
 
-  Future<List<AccountCategory>> getAllNoteData() async {
+  Future<List<AccountCategory>> getAllCategories() async {
     await open();
     List<Map> maps = await database.query(
       accountCategoryTableName,

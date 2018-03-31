@@ -89,7 +89,7 @@ class CurrencyProvider {
     return maps.length > 0 ? new Currency.fromMap(maps.first) : null;
   }
 
-  Future<List<Currency>> getAllNoteData() async {
+  Future<List<Currency>> getAllCurrencies() async {
     await open();
     List<Map> maps = await database.query(
       tableName,
