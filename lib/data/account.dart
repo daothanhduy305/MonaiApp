@@ -1,3 +1,4 @@
+import 'package:monai/data/category.dart';
 import 'package:monai/data/currency.dart';
 
 class Account {
@@ -5,4 +6,5 @@ class Account {
   String name;
   double initialBalance, currentBalance;
   Currency currency;
+  AccountCategory accountCategory;
 }
