@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NewTransactionScreen extends StatefulWidget {
   @override
@@ -15,7 +14,7 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
           ),
           actions: <Widget>[
             new IconButton(
-                icon: new Icon(FontAwesomeIcons.check),
+                icon: new Icon(Icons.check),
                 onPressed: () {
 
                 }
