@@ -47,7 +47,7 @@ const columnUpdatedDateTime = "updated_date";
 class CurrencyProvider {
   // Singleton pattern
   static final CurrencyProvider _currencyProvider =
-      new CurrencyProvider._internal();
+  new CurrencyProvider._internal();
 
   CurrencyProvider._internal();
 
@@ -59,9 +59,9 @@ class CurrencyProvider {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
     database = await openDatabase(path, version: 1,
-        // We would create our db if we have never done so
-        onCreate: (db, ver) async {
-      await db.execute('''
+      // We would create our db if we have never done so
+      onCreate: (db, ver) async {
+        await db.execute('''
       create table $tableName(
        $columnId integer primary key autoincrement,
        $columnShortName text not null,
@@ -70,7 +70,7 @@ class CurrencyProvider {
        $columnUpdatedDateTime text not null
       );
       ''');
-    });
+      });
   }
 
   Future<Currency> insert(Currency currency) async {
@@ -83,15 +83,15 @@ class CurrencyProvider {
   Future<Currency> getCurrency(int id) async {
     await open();
     List<Map> maps = await database.query(tableName,
-        columns: [
-          columnId,
-          columnShortName,
-          columnLongName,
-          columnRate,
-          columnUpdatedDateTime
-        ],
-        where: "$columnId = ?",
-        whereArgs: [id]);
+      columns: [
+        columnId,
+        columnShortName,
+        columnLongName,
+        columnRate,
+        columnUpdatedDateTime
+      ],
+      where: "$columnId = ?",
+      whereArgs: [id]);
     await close();
     return maps.length > 0 ? new Currency.fromMap(maps.first) : null;
   }
@@ -115,7 +115,7 @@ class CurrencyProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-        .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+      .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
@@ -123,7 +123,7 @@ class CurrencyProvider {
   Future<int> update(Currency currency) async {
     await open();
     var result = await database.update(tableName, currency.toMap(),
-        where: "$columnId = ?", whereArgs: [currency.id]);
+      where: "$columnId = ?", whereArgs: [currency.id]);
     await close();
     return result;
   }

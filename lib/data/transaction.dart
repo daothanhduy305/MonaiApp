@@ -37,14 +37,14 @@ class Transaction {
     dateTime = DateTime.parse(map[columnDateTime]);
 
     TransactionCategoryProvider
-        .getInstance()
-        .getCategory(map[columnCategory])
-        .then((value) => category = value);
+      .getInstance()
+      .getCategory(map[columnCategory])
+      .then((value) => category = value);
 
     AccountProvider
-        .getInstance()
-        .getAccount(map[columnAccount])
-        .then((value) => account = value);
+      .getInstance()
+      .getAccount(map[columnAccount])
+      .then((value) => account = value);
   }
 }
 
@@ -60,7 +60,7 @@ const columnAccount = "account";
 class TransactionProvider {
   // Singleton pattern
   static final TransactionProvider _transactionProvider =
-      new TransactionProvider._internal();
+  new TransactionProvider._internal();
 
   TransactionProvider._internal();
 
@@ -72,9 +72,9 @@ class TransactionProvider {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
     database = await openDatabase(path, version: 1,
-        // We would create our db if we have never done so
-        onCreate: (db, ver) async {
-      await db.execute('''
+      // We would create our db if we have never done so
+      onCreate: (db, ver) async {
+        await db.execute('''
       create table $tableName(
        $columnId integer primary key autoincrement,
        $columnNote text not null,
@@ -84,7 +84,7 @@ class TransactionProvider {
        $columnAccount integer not null
       );
       ''');
-    });
+      });
   }
 
   Future<Transaction> insert(Transaction transaction) async {
@@ -97,16 +97,16 @@ class TransactionProvider {
   Future<Transaction> getTransaction(int id) async {
     await open();
     List<Map> maps = await database.query(tableName,
-        columns: [
-          columnId,
-          columnNote,
-          columnAmount,
-          columnDateTime,
-          columnCategory,
-          columnAccount,
-        ],
-        where: "$columnId = ?",
-        whereArgs: [id]);
+      columns: [
+        columnId,
+        columnNote,
+        columnAmount,
+        columnDateTime,
+        columnCategory,
+        columnAccount,
+      ],
+      where: "$columnId = ?",
+      whereArgs: [id]);
     await close();
     return maps.length > 0 ? new Transaction.fromMap(maps.first) : null;
   }
@@ -131,7 +131,7 @@ class TransactionProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-        .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+      .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
@@ -139,7 +139,7 @@ class TransactionProvider {
   Future<int> update(Transaction transaction) async {
     await open();
     var result = await database.update(tableName, transaction.toMap(),
-        where: "$columnId = ?", whereArgs: [transaction.id]);
+      where: "$columnId = ?", whereArgs: [transaction.id]);
     await close();
     return result;
   }
