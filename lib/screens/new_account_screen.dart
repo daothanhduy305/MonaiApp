@@ -10,7 +10,9 @@ class NewAccountScreenState extends State<NewAccountScreen> {
   Widget build(BuildContext context) => new Scaffold(
         appBar: new AppBar(
           title: new Text('New Account'),
-          actions: <Widget>[new IconButton(icon: new Icon(Icons.check), onPressed: () {})],
+          actions: <Widget>[
+            new IconButton(icon: new Icon(Icons.check), onPressed: () {})
+          ],
         ),
         body: new ListView(
           children: <Widget>[

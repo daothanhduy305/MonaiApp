@@ -46,7 +46,8 @@ const columnUpdatedDateTime = "updated_date";
 
 class CurrencyProvider {
   // Singleton pattern
-  static final CurrencyProvider _currencyProvider = new CurrencyProvider._internal();
+  static final CurrencyProvider _currencyProvider =
+      new CurrencyProvider._internal();
 
   CurrencyProvider._internal();
 
@@ -82,7 +83,13 @@ class CurrencyProvider {
   Future<Currency> getCurrency(int id) async {
     await open();
     List<Map> maps = await database.query(tableName,
-        columns: [columnId, columnShortName, columnLongName, columnRate, columnUpdatedDateTime],
+        columns: [
+          columnId,
+          columnShortName,
+          columnLongName,
+          columnRate,
+          columnUpdatedDateTime
+        ],
         where: "$columnId = ?",
         whereArgs: [id]);
     await close();
@@ -93,7 +100,13 @@ class CurrencyProvider {
     await open();
     List<Map> maps = await database.query(
       tableName,
-      columns: [columnId, columnShortName, columnLongName, columnRate, columnUpdatedDateTime],
+      columns: [
+        columnId,
+        columnShortName,
+        columnLongName,
+        columnRate,
+        columnUpdatedDateTime
+      ],
     );
     await close();
     return maps.map((map) => new Currency.fromMap(map)).toList();
@@ -101,15 +114,16 @@ class CurrencyProvider {
 
   Future<int> delete(int id) async {
     await open();
-    var result = await database.delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+    var result = await database
+        .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
 
   Future<int> update(Currency currency) async {
     await open();
-    var result = await database
-        .update(tableName, currency.toMap(), where: "$columnId = ?", whereArgs: [currency.id]);
+    var result = await database.update(tableName, currency.toMap(),
+        where: "$columnId = ?", whereArgs: [currency.id]);
     await close();
     return result;
   }

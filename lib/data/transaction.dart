@@ -41,7 +41,10 @@ class Transaction {
         .getCategory(map[columnCategory])
         .then((value) => category = value);
 
-    AccountProvider.getInstance().getAccount(map[columnAccount]).then((value) => account = value);
+    AccountProvider
+        .getInstance()
+        .getAccount(map[columnAccount])
+        .then((value) => account = value);
   }
 }
 
@@ -56,7 +59,8 @@ const columnAccount = "account";
 
 class TransactionProvider {
   // Singleton pattern
-  static final TransactionProvider _transactionProvider = new TransactionProvider._internal();
+  static final TransactionProvider _transactionProvider =
+      new TransactionProvider._internal();
 
   TransactionProvider._internal();
 
@@ -126,7 +130,8 @@ class TransactionProvider {
 
   Future<int> delete(int id) async {
     await open();
-    var result = await database.delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+    var result = await database
+        .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }

@@ -67,7 +67,8 @@ class TransactionCategoryProvider {
 
   TransactionCategoryProvider._internal();
 
-  static TransactionCategoryProvider getInstance() => _transactionCategoryProvider;
+  static TransactionCategoryProvider getInstance() =>
+      _transactionCategoryProvider;
 
   Database database;
 
@@ -88,7 +89,8 @@ class TransactionCategoryProvider {
 
   Future<TransactionCategory> insert(TransactionCategory category) async {
     await open();
-    category.id = await database.insert(transactionCategoryTableName, category.toMap());
+    category.id =
+        await database.insert(transactionCategoryTableName, category.toMap());
     await close();
     return category;
   }
@@ -96,7 +98,9 @@ class TransactionCategoryProvider {
   Future<TransactionCategory> getCategory(int id) async {
     await open();
     List<Map> maps = await database.query(transactionCategoryTableName,
-        columns: [columnId, columnName], where: "$columnId = ?", whereArgs: [id]);
+        columns: [columnId, columnName],
+        where: "$columnId = ?",
+        whereArgs: [id]);
     await close();
     return maps.length > 0 ? new TransactionCategory.fromMap(maps.first) : null;
   }
@@ -113,15 +117,16 @@ class TransactionCategoryProvider {
 
   Future<int> delete(int id) async {
     await open();
-    var result = await database
-        .delete(transactionCategoryTableName, where: "$columnId = ?", whereArgs: [id]);
+    var result = await database.delete(transactionCategoryTableName,
+        where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
 
   Future<int> update(TransactionCategory category) async {
     await open();
-    var result = await database.update(transactionCategoryTableName, category.toMap(),
+    var result = await database.update(
+        transactionCategoryTableName, category.toMap(),
         where: "$columnId = ?", whereArgs: [category.id]);
     await close();
     return result;
@@ -133,7 +138,7 @@ class TransactionCategoryProvider {
 class AccountCategoryProvider {
   // Singleton pattern
   static final AccountCategoryProvider _accountCategoryProvider =
-  new AccountCategoryProvider._internal();
+      new AccountCategoryProvider._internal();
 
   AccountCategoryProvider._internal();
 
@@ -147,18 +152,19 @@ class AccountCategoryProvider {
     database = await openDatabase(path, version: 1,
         // We would create our db if we have never done so
         onCreate: (db, ver) async {
-          await db.execute('''
+      await db.execute('''
       create table $accountCategoryTableName(
        $columnId integer primary key autoincrement,
        $columnName text not null
       );
       ''');
-        });
+    });
   }
 
   Future<AccountCategory> insert(AccountCategory category) async {
     await open();
-    category.id = await database.insert(accountCategoryTableName, category.toMap());
+    category.id =
+        await database.insert(accountCategoryTableName, category.toMap());
     await close();
     return category;
   }
@@ -166,7 +172,9 @@ class AccountCategoryProvider {
   Future<AccountCategory> getCategory(int id) async {
     await open();
     List<Map> maps = await database.query(accountCategoryTableName,
-        columns: [columnId, columnName], where: "$columnId = ?", whereArgs: [id]);
+        columns: [columnId, columnName],
+        where: "$columnId = ?",
+        whereArgs: [id]);
     await close();
     return maps.length > 0 ? new AccountCategory.fromMap(maps.first) : null;
   }
@@ -183,15 +191,16 @@ class AccountCategoryProvider {
 
   Future<int> delete(int id) async {
     await open();
-    var result = await database
-        .delete(accountCategoryTableName, where: "$columnId = ?", whereArgs: [id]);
+    var result = await database.delete(accountCategoryTableName,
+        where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
 
   Future<int> update(AccountCategory category) async {
     await open();
-    var result = await database.update(accountCategoryTableName, category.toMap(),
+    var result = await database.update(
+        accountCategoryTableName, category.toMap(),
         where: "$columnId = ?", whereArgs: [category.id]);
     await close();
     return result;

@@ -41,7 +41,10 @@ class Account {
     updatedDateTime = DateTime.parse(map[columnUpdatedDateTime]);
     createdDateTime = DateTime.parse(map[columnCreatedDateTime]);
 
-    CurrencyProvider.getInstance().getCurrency(map[columnRate]).then((value) => currency = value);
+    CurrencyProvider
+        .getInstance()
+        .getCurrency(map[columnRate])
+        .then((value) => currency = value);
 
     AccountCategoryProvider
         .getInstance()
@@ -63,7 +66,8 @@ const columnCreatedDateTime = "created_date";
 
 class AccountProvider {
   // Singleton pattern
-  static final AccountProvider _accountProvider = new AccountProvider._internal();
+  static final AccountProvider _accountProvider =
+      new AccountProvider._internal();
 
   AccountProvider._internal();
 
@@ -139,15 +143,16 @@ class AccountProvider {
 
   Future<int> delete(int id) async {
     await open();
-    var result = await database.delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+    var result = await database
+        .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
 
   Future<int> update(Account account) async {
     await open();
-    var result = await database
-        .update(tableName, account.toMap(), where: "$columnId = ?", whereArgs: [account.id]);
+    var result = await database.update(tableName, account.toMap(),
+        where: "$columnId = ?", whereArgs: [account.id]);
     await close();
     return result;
   }
