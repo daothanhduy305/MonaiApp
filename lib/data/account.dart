@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:monai/configs/general_configs.dart';
-import 'package:monai/data/category.dart';
 import 'package:monai/data/currency.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,11 +10,22 @@ import 'package:sqflite/sqflite.dart';
 class Account {
   // TODO: There might be icon in the future
   int id;
-  String name;
+  String name, accountCategory;
   double initialBalance, currentBalance;
   Currency currency;
-  AccountCategory accountCategory;
   DateTime updatedDateTime, createdDateTime;
+
+  Account({
+    this.name,
+    this.initialBalance,
+    this.currentBalance,
+    this.accountCategory,
+    this.currency
+  }) {
+    var dateTime = new DateTime.now();
+    this.createdDateTime = dateTime;
+    this.updatedDateTime = dateTime;
+  }
 
   Map toMap() {
     Map returningMap = {
@@ -23,7 +33,7 @@ class Account {
       columnInitialBalance: initialBalance,
       columnCurrentBalance: currentBalance,
       columnCurrency: currency.id,
-      columnAccountCategory: accountCategory.id,
+      columnAccountCategory: accountCategory,
       columnUpdatedDateTime: updatedDateTime.toIso8601String(),
       columnCreatedDateTime: createdDateTime.toIso8601String(),
     };
@@ -36,6 +46,7 @@ class Account {
   Account.fromMap(Map map) {
     id = map[columnId];
     name = map[columnName];
+    accountCategory = map[columnAccountCategory];
     initialBalance = map[columnInitialBalance];
     currentBalance = map[columnCurrentBalance];
     updatedDateTime = DateTime.parse(map[columnUpdatedDateTime]);
@@ -45,11 +56,6 @@ class Account {
       .getInstance()
       .getCurrencyById(map[columnId])
       .then((value) => currency = value);
-
-    AccountCategoryProvider
-      .getInstance()
-      .getCategory(map[accountCategory])
-      .then((value) => accountCategory = value);
   }
 }
 
@@ -88,7 +94,7 @@ class AccountProvider {
        $columnInitialBalance real not null,
        $columnCurrentBalance real not null,
        $columnCurrency integer not null
-       $columnAccountCategory integer not null
+       $columnAccountCategory text not null
        $columnUpdatedDateTime text not null
        $columnCreatedDateTime text not null
       );
