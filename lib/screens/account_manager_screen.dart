@@ -7,15 +7,16 @@ class AccountManagerScreen extends StatefulWidget {
 
 class AccountManagerScreenState extends State<AccountManagerScreen> {
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Acount Manager'),
-        ),
-        floatingActionButton: new FloatingActionButton(
-          child: new Icon(Icons.add),
-          onPressed: () {
-            Navigator.of(context).pushNamed("/new_account");
-          },
-        ),
-      );
+  Widget build(BuildContext context) =>
+    new Scaffold(
+      appBar: new AppBar(
+        title: new Text('Acount Manager'),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        child: new Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed("/new_account");
+        },
+      ),
+    );
 }

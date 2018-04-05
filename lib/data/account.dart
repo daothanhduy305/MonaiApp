@@ -42,14 +42,14 @@ class Account {
     createdDateTime = DateTime.parse(map[columnCreatedDateTime]);
 
     CurrencyProvider
-        .getInstance()
-        .getCurrency(map[columnRate])
-        .then((value) => currency = value);
+      .getInstance()
+      .getCurrency(map[columnRate])
+      .then((value) => currency = value);
 
     AccountCategoryProvider
-        .getInstance()
-        .getCategory(map[accountCategory])
-        .then((value) => accountCategory = value);
+      .getInstance()
+      .getCategory(map[accountCategory])
+      .then((value) => accountCategory = value);
   }
 }
 
@@ -67,7 +67,7 @@ const columnCreatedDateTime = "created_date";
 class AccountProvider {
   // Singleton pattern
   static final AccountProvider _accountProvider =
-      new AccountProvider._internal();
+  new AccountProvider._internal();
 
   AccountProvider._internal();
 
@@ -79,9 +79,9 @@ class AccountProvider {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
     database = await openDatabase(path, version: 1,
-        // We would create our db if we have never done so
-        onCreate: (db, ver) async {
-      await db.execute('''
+      // We would create our db if we have never done so
+      onCreate: (db, ver) async {
+        await db.execute('''
       create table $tableName(
        $columnId integer primary key autoincrement,
        $columnName text not null,
@@ -93,7 +93,7 @@ class AccountProvider {
        $columnCreatedDateTime text not null
       );
       ''');
-    });
+      });
   }
 
   Future<Account> insert(Account account) async {
@@ -106,18 +106,18 @@ class AccountProvider {
   Future<Account> getAccount(int id) async {
     await open();
     List<Map> maps = await database.query(tableName,
-        columns: [
-          columnId,
-          columnName,
-          columnInitialBalance,
-          columnCurrentBalance,
-          columnCurrency,
-          columnAccountCategory,
-          columnUpdatedDateTime,
-          columnCreatedDateTime,
-        ],
-        where: "$columnId = ?",
-        whereArgs: [id]);
+      columns: [
+        columnId,
+        columnName,
+        columnInitialBalance,
+        columnCurrentBalance,
+        columnCurrency,
+        columnAccountCategory,
+        columnUpdatedDateTime,
+        columnCreatedDateTime,
+      ],
+      where: "$columnId = ?",
+      whereArgs: [id]);
     await close();
     return maps.length > 0 ? new Account.fromMap(maps.first) : null;
   }
@@ -144,7 +144,7 @@ class AccountProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-        .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+      .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
@@ -152,7 +152,7 @@ class AccountProvider {
   Future<int> update(Account account) async {
     await open();
     var result = await database.update(tableName, account.toMap(),
-        where: "$columnId = ?", whereArgs: [account.id]);
+      where: "$columnId = ?", whereArgs: [account.id]);
     await close();
     return result;
   }
