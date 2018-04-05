@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monai/data/account.dart';
 
 class AccountManagerScreen extends StatefulWidget {
   @override
@@ -6,6 +7,15 @@ class AccountManagerScreen extends StatefulWidget {
 }
 
 class AccountManagerScreenState extends State<AccountManagerScreen> {
+  List<Account> currentAccounts;
+
+  @override
+  void initState() {
+    super.initState();
+    AccountProvider.getInstance().getAllAccounts().then((value) =>
+    setState(() => currentAccounts = value));
+  }
+
   @override
   Widget build(BuildContext context) =>
     new Scaffold(
@@ -15,7 +25,10 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
       floatingActionButton: new FloatingActionButton(
         child: new Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).pushNamed("/new_account");
+          Navigator.of(context).pushNamed("/new_account").then((result) {
+            if (result != null)
+              setState(() => currentAccounts.add(result));
+          });
         },
       ),
     );
