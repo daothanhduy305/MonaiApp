@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monai/data/account.dart';
 import 'package:monai/data/currency.dart';
 
 class NewAccountScreen extends StatefulWidget {
@@ -8,6 +9,16 @@ class NewAccountScreen extends StatefulWidget {
 
 class NewAccountScreenState extends State<NewAccountScreen> {
   Currency currentCurrency;
+  String accountName, accountCategory, accountBalance;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    accountBalance = '0.0';
+    accountName = '';
+    accountCategory = '';
+  }
 
   @override
   Widget build(BuildContext context) =>
@@ -15,7 +26,18 @@ class NewAccountScreenState extends State<NewAccountScreen> {
       appBar: new AppBar(
         title: new Text('New Account'),
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.check), onPressed: () {})
+          new IconButton(icon: new Icon(Icons.check), onPressed: () {
+            var account = new Account(
+              name: accountName,
+              initialBalance: double.parse(accountBalance),
+              currentBalance: double.parse(accountBalance),
+              accountCategory: accountCategory,
+              currency: currentCurrency
+            );
+
+            AccountProvider.getInstance().insert(account).then((value) =>
+              Navigator.pop(context, value));
+          })
         ],
       ),
       body: new ListView(
@@ -24,12 +46,14 @@ class NewAccountScreenState extends State<NewAccountScreen> {
             title: new TextField(
               keyboardType: TextInputType.text,
               decoration: new InputDecoration(labelText: 'Name'),
+              onChanged: (value) => accountName = value,
             ),
           ),
           new ListTile(
             title: new TextField(
               keyboardType: TextInputType.text,
               decoration: new InputDecoration(labelText: 'Category'),
+              onChanged: (value) => accountCategory = value,
             ),
           ),
           new ListTile(
@@ -41,6 +65,7 @@ class NewAccountScreenState extends State<NewAccountScreen> {
                     hintText: currentCurrency == null ? '' : '0',
                     labelText: 'Initial balance'
                   ),
+                  onChanged: (value) => accountBalance = value,
                 ),),
                 new Padding(
                   padding: new EdgeInsets.only(left: 10.0),
