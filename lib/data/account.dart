@@ -43,7 +43,7 @@ class Account {
 
     CurrencyProvider
       .getInstance()
-      .getCurrency(map[columnRate])
+      .getCurrencyById(map[columnId])
       .then((value) => currency = value);
 
     AccountCategoryProvider

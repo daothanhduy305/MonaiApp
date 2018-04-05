@@ -109,26 +109,40 @@ class _MyHomePageState extends State<MyHomePage> {
         child: new Icon(Icons.add),
       ),
       drawer: new Drawer(
-        child: new ListView(
+        child: new Column(
           children: <Widget>[
-            new ListTile(
-              title: new Text('Transactions'),
-            ),
-            new ListTile(
-              title: new Text('Debts'),
-            ),
-            new ListTile(
-              title: new Text('Budgets'),
-            ),
-            new ListTile(
-              title: new Text('Savings'),
-            ),
-            new ListTile(
-              title: new Text('Bills'),
-            ),
-            new ListTile(
-              title: new Text('Settings'),
-            ),
+            new UserAccountsDrawerHeader(accountName: new Text('Testing user'), accountEmail: new Text('email@gmail.com'), margin: new EdgeInsets.only(bottom: 0.0),),
+            new Expanded(child: new ListView(
+              padding: new EdgeInsets.only(top: 10.0),
+              children: <Widget>[
+                new ListTile(
+                  leading: new Icon(Icons.account_balance_wallet),
+                  title: new Text('Transactions'),
+                ),
+                new ListTile(
+                  leading: new Icon(Icons.swap_vert),
+                  title: new Text('Debts'),
+                ),
+                new Divider(),
+                new ListTile(
+                  leading: new Icon(Icons.monetization_on),
+                  title: new Text('Budgets'),
+                ),
+                new ListTile(
+                  leading: new Icon(Icons.shopping_basket),
+                  title: new Text('Savings'),
+                ),
+                new ListTile(
+                  leading: new Icon(Icons.assignment),
+                  title: new Text('Bills'),
+                ),
+                new Divider(),
+                new ListTile(
+                  leading: new Icon(Icons.settings),
+                  title: new Text('Settings'),
+                ),
+              ],
+            ))
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
