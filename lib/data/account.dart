@@ -111,17 +111,8 @@ class AccountProvider {
 
   Future<Account> getAccount(int id) async {
     await open();
-    List<Map> maps = await database.query(tableName,
-      columns: [
-        columnId,
-        columnName,
-        columnInitialBalance,
-        columnCurrentBalance,
-        columnCurrency,
-        columnAccountCategory,
-        columnUpdatedDateTime,
-        columnCreatedDateTime,
-      ],
+    List<Map> maps = await database.query(
+      tableName,
       where: "$columnId = ?",
       whereArgs: [id]);
     await close();
@@ -130,19 +121,7 @@ class AccountProvider {
 
   Future<List<Account>> getAllAccounts() async {
     await open();
-    List<Map> maps = await database.query(
-      tableName,
-      columns: [
-        columnId,
-        columnName,
-        columnInitialBalance,
-        columnCurrentBalance,
-        columnCurrency,
-        columnAccountCategory,
-        columnUpdatedDateTime,
-        columnCreatedDateTime,
-      ],
-    );
+    List<Map> maps = await database.query(tableName);
     await close();
     return maps.map((map) => new Account.fromMap(map)).toList();
   }

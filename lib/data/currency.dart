@@ -476,14 +476,8 @@ class CurrencyProvider {
 
   Future<Currency> getCurrencyById(int id) async {
     await open();
-    List<Map> maps = await database.query(tableName,
-      columns: [
-        columnId,
-        columnShortName,
-        columnLongName,
-        columnRate,
-        columnUpdatedDateTime
-      ],
+    List<Map> maps = await database.query(
+      tableName,
       where: "$columnId = ?",
       whereArgs: [id]);
     await close();
@@ -492,14 +486,8 @@ class CurrencyProvider {
 
   Future<Currency> getCurrencyByShortName(String shortName) async {
     await open();
-    List<Map> maps = await database.query(tableName,
-      columns: [
-        columnId,
-        columnShortName,
-        columnLongName,
-        columnRate,
-        columnUpdatedDateTime
-      ],
+    List<Map> maps = await database.query(
+      tableName,
       where: "$columnShortName like ?",
       whereArgs: [shortName]);
     await close();
@@ -508,16 +496,7 @@ class CurrencyProvider {
 
   Future<List<Currency>> getAllCurrencies() async {
     await open();
-    List<Map> maps = await database.query(
-      tableName,
-      columns: [
-        columnId,
-        columnShortName,
-        columnLongName,
-        columnRate,
-        columnUpdatedDateTime
-      ],
-    );
+    List<Map> maps = await database.query(tableName);
     await close();
     return maps.map((map) => new Currency.fromMap(map)).toList();
   }

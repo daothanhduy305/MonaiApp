@@ -96,15 +96,8 @@ class TransactionProvider {
 
   Future<Transaction> getTransaction(int id) async {
     await open();
-    List<Map> maps = await database.query(tableName,
-      columns: [
-        columnId,
-        columnNote,
-        columnAmount,
-        columnDateTime,
-        columnCategory,
-        columnAccount,
-      ],
+    List<Map> maps = await database.query(
+      tableName,
       where: "$columnId = ?",
       whereArgs: [id]);
     await close();
@@ -113,17 +106,7 @@ class TransactionProvider {
 
   Future<List<Transaction>> getAllCurrencies() async {
     await open();
-    List<Map> maps = await database.query(
-      tableName,
-      columns: [
-        columnId,
-        columnNote,
-        columnAmount,
-        columnDateTime,
-        columnCategory,
-        columnAccount,
-      ],
-    );
+    List<Map> maps = await database.query(tableName,);
     await close();
     return maps.map((map) => new Transaction.fromMap(map)).toList();
   }
