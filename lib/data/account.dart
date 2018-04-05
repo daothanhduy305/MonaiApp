@@ -93,9 +93,9 @@ class AccountProvider {
        $columnName text not null,
        $columnInitialBalance real not null,
        $columnCurrentBalance real not null,
-       $columnCurrency integer not null
-       $columnAccountCategory text not null
-       $columnUpdatedDateTime text not null
+       $columnCurrency integer not null,
+       $columnAccountCategory text not null,
+       $columnUpdatedDateTime text not null,
        $columnCreatedDateTime text not null
       );
       ''');

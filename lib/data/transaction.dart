@@ -80,7 +80,7 @@ class TransactionProvider {
        $columnNote text not null,
        $columnAmount real not null,
        $columnDateTime text not null,
-       $columnCategory integer not null
+       $columnCategory integer not null,
        $columnAccount integer not null
       );
       ''');
