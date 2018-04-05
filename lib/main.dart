@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:monai/configs/general_configs.dart';
+import 'package:monai/data/account.dart';
+import 'package:monai/data/currency.dart';
+import 'package:monai/data/transaction.dart';
 import 'package:monai/screens/account_manager_screen.dart';
 import 'package:monai/screens/new_account_screen.dart';
 import 'package:monai/screens/new_transaction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(new MyApp());
 
@@ -52,14 +56,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool initializing = true;
+  double progress = 0.0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return new Scaffold(
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -84,24 +92,17 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
+          children: initializing? <Widget>[
+            new CircularProgressIndicator(
+              value: progress,
+            ),
+            new Text('Initializing...'),
+          ] : <Widget>[],
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: initializing? null : new FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed("/new_transaction");
         },
@@ -147,5 +148,24 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  void initialize() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool initialized = (prefs.getBool('initialized') ?? false);
+    setState(() => initializing = !initialized);
+    if (!initialized) {
+      await CurrencyProvider.getInstance().open();
+      await CurrencyProvider.getInstance().close();
+      setState(() => progress = 0.33);
+      await AccountProvider.getInstance().open();
+      await AccountProvider.getInstance().close();
+      setState(() => progress = 0.66);
+      await TransactionProvider.getInstance().open();
+      await TransactionProvider.getInstance().close();
+      setState(() => progress = 1.0);
+      prefs.setBool('initialized', true);
+      setState(() => initializing = false);
+    }
   }
 }
