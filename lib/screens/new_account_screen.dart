@@ -13,7 +13,6 @@ class NewAccountScreenState extends State<NewAccountScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     accountBalance = '0.0';
     accountName = '';
