@@ -163,5 +163,5 @@ class AccountProvider {
     return result;
   }
 
-  Future close() async => database.close();
+  Future close() async => database?.close();
 }
