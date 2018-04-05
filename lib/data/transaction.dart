@@ -48,7 +48,7 @@ class Transaction {
   }
 }
 
-const String tableName = "currencies";
+const String tableName = "transactions";
 
 const columnId = "_id";
 const columnNote = "note";
