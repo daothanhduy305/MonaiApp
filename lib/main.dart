@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monai/configs/general_configs.dart';
-import 'package:monai/data/account.dart';
-import 'package:monai/data/currency.dart';
-import 'package:monai/data/transaction.dart';
+import 'package:monai/data/database_helper.dart';
 import 'package:monai/screens/account_manager_screen.dart';
 import 'package:monai/screens/new_account_screen.dart';
 import 'package:monai/screens/new_transaction_screen.dart';
@@ -57,7 +55,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool initializing = true;
-  double progress = 0.0;
 
   @override
   void initState() {
@@ -95,10 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: initializing? <Widget>[
-            new CircularProgressIndicator(
-              value: progress,
-            ),
             new Text('Initializing...'),
+            // TODO: Add components to the container below
           ] : <Widget>[],
         ),
       ),
@@ -155,15 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
     bool initialized = (prefs.getBool('initialized') ?? false);
     setState(() => initializing = !initialized);
     if (!initialized) {
-      await CurrencyProvider.getInstance().open();
-      await CurrencyProvider.getInstance().close();
-      setState(() => progress = 0.33);
-      await AccountProvider.getInstance().open();
-      await AccountProvider.getInstance().close();
-      setState(() => progress = 0.66);
-      await TransactionProvider.getInstance().open();
-      await TransactionProvider.getInstance().close();
-      setState(() => progress = 1.0);
+      await DatabaseHelper.getInstance().initializeDB();
       prefs.setBool('initialized', true);
       setState(() => initializing = false);
     }

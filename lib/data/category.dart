@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:monai/configs/general_configs.dart';
+import 'package:monai/data/database_helper.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -31,13 +32,6 @@ class TransactionCategory {
 }
 
 // Defining providers
-
-const String transactionCategoryTableName = "transaction_categories";
-const String accountCategoryTableName = "account_categories";
-
-const columnId = "_id";
-const columnName = "name";
-
 class TransactionCategoryProvider {
   // Singleton pattern
   static final TransactionCategoryProvider _transactionCategoryProvider =
@@ -53,16 +47,7 @@ class TransactionCategoryProvider {
   Future open() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
-    database = await openDatabase(path, version: 1,
-      // We would create our db if we have never done so
-      onCreate: (db, ver) async {
-        await db.execute('''
-      create table $transactionCategoryTableName(
-       $columnId integer primary key autoincrement,
-       $columnName text not null
-      );
-      ''');
-      });
+    database = await openDatabase(path, version: 1);
   }
 
   Future<TransactionCategory> insert(TransactionCategory category) async {

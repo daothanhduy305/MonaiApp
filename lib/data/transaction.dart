@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:monai/configs/general_configs.dart';
 import 'package:monai/data/account.dart';
 import 'package:monai/data/category.dart';
+import 'package:monai/data/database_helper.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,7 +21,7 @@ class Transaction {
     Map returningMap = {
       columnNote: note,
       columnAmount: amount,
-      columnDateTime: dateTime.toIso8601String(),
+      columnCreatedDateTime: dateTime.toIso8601String(),
       columnCategory: category.id,
       columnAccount: account.id,
     };
@@ -34,7 +35,7 @@ class Transaction {
     id = map[columnId];
     note = map[columnNote];
     amount = map[columnAmount];
-    dateTime = DateTime.parse(map[columnDateTime]);
+    dateTime = DateTime.parse(map[columnCreatedDateTime]);
 
     TransactionCategoryProvider
       .getInstance()
@@ -47,15 +48,6 @@ class Transaction {
       .then((value) => account = value);
   }
 }
-
-const String tableName = "transactions";
-
-const columnId = "_id";
-const columnNote = "note";
-const columnAmount = "amount";
-const columnDateTime = "date_time";
-const columnCategory = "category";
-const columnAccount = "account";
 
 class TransactionProvider {
   // Singleton pattern
@@ -71,25 +63,12 @@ class TransactionProvider {
   Future open() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
-    database = await openDatabase(path, version: 1,
-      // We would create our db if we have never done so
-      onCreate: (db, ver) async {
-        await db.execute('''
-      create table $tableName(
-       $columnId integer primary key autoincrement,
-       $columnNote text not null,
-       $columnAmount real not null,
-       $columnDateTime text not null,
-       $columnCategory integer not null,
-       $columnAccount integer not null
-      );
-      ''');
-      });
+    database = await openDatabase(path, version: 1);
   }
 
   Future<Transaction> insert(Transaction transaction) async {
     await open();
-    transaction.id = await database.insert(tableName, transaction.toMap());
+    transaction.id = await database.insert(transactionTableName, transaction.toMap());
     await close();
     return transaction;
   }
@@ -97,7 +76,7 @@ class TransactionProvider {
   Future<Transaction> getTransaction(int id) async {
     await open();
     List<Map> maps = await database.query(
-      tableName,
+      transactionTableName,
       where: "$columnId = ?",
       whereArgs: [id]);
     await close();
@@ -106,7 +85,7 @@ class TransactionProvider {
 
   Future<List<Transaction>> getAllCurrencies() async {
     await open();
-    List<Map> maps = await database.query(tableName,);
+    List<Map> maps = await database.query(transactionTableName,);
     await close();
     return maps.map((map) => new Transaction.fromMap(map)).toList();
   }
@@ -114,14 +93,14 @@ class TransactionProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-      .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+      .delete(transactionTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
 
   Future<int> update(Transaction transaction) async {
     await open();
-    var result = await database.update(tableName, transaction.toMap(),
+    var result = await database.update(transactionTableName, transaction.toMap(),
       where: "$columnId = ?", whereArgs: [transaction.id]);
     await close();
     return result;

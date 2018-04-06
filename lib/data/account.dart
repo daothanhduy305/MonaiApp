@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:monai/configs/general_configs.dart';
 import 'package:monai/data/currency.dart';
+import 'package:monai/data/database_helper.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -59,17 +60,6 @@ class Account {
   }
 }
 
-const String tableName = "accounts";
-
-const columnId = "_id";
-const columnName = "name";
-const columnInitialBalance = "i_balance";
-const columnCurrentBalance = "c_balance";
-const columnCurrency = "currency";
-const columnAccountCategory = "category";
-const columnUpdatedDateTime = "updated_date";
-const columnCreatedDateTime = "created_date";
-
 class AccountProvider {
   // Singleton pattern
   static final AccountProvider _accountProvider =
@@ -84,27 +74,12 @@ class AccountProvider {
   Future open() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, DB_NAME);
-    database = await openDatabase(path, version: 1,
-      // We would create our db if we have never done so
-      onCreate: (db, ver) async {
-        await db.execute('''
-      create table $tableName(
-       $columnId integer primary key autoincrement,
-       $columnName text not null,
-       $columnInitialBalance real not null,
-       $columnCurrentBalance real not null,
-       $columnCurrency integer not null,
-       $columnAccountCategory text not null,
-       $columnUpdatedDateTime text not null,
-       $columnCreatedDateTime text not null
-      );
-      ''');
-      });
+    database = await openDatabase(path, version: 1);
   }
 
   Future<Account> insert(Account account) async {
     await open();
-    account.id = await database.insert(tableName, account.toMap());
+    account.id = await database.insert(accountTableName, account.toMap());
     await close();
     return account;
   }
@@ -112,7 +87,7 @@ class AccountProvider {
   Future<Account> getAccount(int id) async {
     await open();
     List<Map> maps = await database.query(
-      tableName,
+      accountTableName,
       where: "$columnId = ?",
       whereArgs: [id]);
     await close();
@@ -121,7 +96,7 @@ class AccountProvider {
 
   Future<List<Account>> getAllAccounts() async {
     await open();
-    List<Map> maps = await database.query(tableName);
+    List<Map> maps = await database.query(accountTableName);
     await close();
     return maps.map((map) => new Account.fromMap(map)).toList();
   }
@@ -129,14 +104,14 @@ class AccountProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-      .delete(tableName, where: "$columnId = ?", whereArgs: [id]);
+      .delete(accountTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
 
   Future<int> update(Account account) async {
     await open();
-    var result = await database.update(tableName, account.toMap(),
+    var result = await database.update(accountTableName, account.toMap(),
       where: "$columnId = ?", whereArgs: [account.id]);
     await close();
     return result;
