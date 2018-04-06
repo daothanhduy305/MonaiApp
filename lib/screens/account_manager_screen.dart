@@ -12,8 +12,9 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
   @override
   void initState() {
     super.initState();
+    currentAccounts = [];
     AccountProvider.getInstance().getAllAccounts().then((value) =>
-    setState(() => currentAccounts = value));
+      setState(() => currentAccounts.addAll(value)));
   }
 
   @override
@@ -31,5 +32,15 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
           });
         },
       ),
+      body: new ListView(
+        children: ListTile.divideTiles(context: context,
+          tiles: currentAccounts.map((account) => buildAccountItemUI(account)))
+          .toList(),
+      ),
+    );
+
+  Widget buildAccountItemUI(Account account) =>
+    new ListTile(
+      title: new Text(account.name),
     );
 }
