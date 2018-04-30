@@ -41,6 +41,8 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
 
   Widget buildAccountItemUI(Account account) =>
     new ListTile(
+      leading: new Icon(Icons.monetization_on),
       title: new Text(account.name),
+      subtitle: new Text('${account.currentBalance.toString()} (${account.currency.shortName})'),
     );
 }
