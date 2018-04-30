@@ -28,8 +28,8 @@ class Account {
     this.updatedDateTime = dateTime;
   }
 
-  Map toMap() {
-    Map returningMap = {
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> returningMap = {
       columnName: name,
       columnInitialBalance: initialBalance,
       columnCurrentBalance: currentBalance,
@@ -44,7 +44,7 @@ class Account {
   }
 
   // To construct Transaction from map
-  Account.fromMap(Map map) {
+  Account.fromMap(Map<String, dynamic> map) {
     id = map[columnId];
     name = map[columnName];
     accountCategory = map[columnAccountCategory];

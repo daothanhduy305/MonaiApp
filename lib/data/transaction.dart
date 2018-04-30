@@ -17,8 +17,8 @@ class Transaction {
   double amount;
   TransactionCategory category;
 
-  Map toMap() {
-    Map returningMap = {
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> returningMap = {
       columnNote: note,
       columnAmount: amount,
       columnCreatedDateTime: dateTime.toIso8601String(),
@@ -31,7 +31,7 @@ class Transaction {
   }
 
   // To construct Transaction from map
-  Transaction.fromMap(Map map) {
+  Transaction.fromMap(Map<String, dynamic> map) {
     id = map[columnId];
     note = map[columnNote];
     amount = map[columnAmount];

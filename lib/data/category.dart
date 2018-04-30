@@ -15,8 +15,8 @@ class TransactionCategory {
   String name;
   int id;
 
-  Map toMap() {
-    Map returningMap = {
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> returningMap = {
       columnName: name,
     };
 
@@ -25,7 +25,7 @@ class TransactionCategory {
   }
 
   // To construct Transaction from map
-  TransactionCategory.fromMap(Map map) {
+  TransactionCategory.fromMap(Map<String, dynamic> map) {
     id = map[columnId];
     name = map[columnName];
   }
