@@ -10,7 +10,7 @@ import 'package:sqflite/sqflite.dart';
 
 class Account {
   // TODO: There might be icon in the future
-  int id;
+  int id, currencyId;
   String name, accountCategory;
   double initialBalance, currentBalance;
   Currency currency;
@@ -52,11 +52,13 @@ class Account {
     currentBalance = map[columnCurrentBalance];
     updatedDateTime = DateTime.parse(map[columnUpdatedDateTime]);
     createdDateTime = DateTime.parse(map[columnCreatedDateTime]);
+    currencyId = map[columnCurrency];
+  }
 
-    CurrencyProvider
+  Future postConstruct() async {
+    currency = await CurrencyProvider
       .getInstance()
-      .getCurrencyById(map[columnId])
-      .then((value) => currency = value);
+      .getCurrencyById(currencyId);
   }
 }
 

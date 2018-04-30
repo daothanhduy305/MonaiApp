@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Transaction {
-  int id;
+  int id, categoryId, accountId;
   Account account;
   DateTime dateTime;
   String note;
@@ -36,16 +36,18 @@ class Transaction {
     note = map[columnNote];
     amount = map[columnAmount];
     dateTime = DateTime.parse(map[columnCreatedDateTime]);
+    accountId = map[columnAccount];
+    categoryId = map[columnCategory];
+  }
 
-    TransactionCategoryProvider
+  Future postConstruct() async {
+    category = await TransactionCategoryProvider
       .getInstance()
-      .getCategory(map[columnCategory])
-      .then((value) => category = value);
+      .getCategory(categoryId);
 
-    AccountProvider
+    account = await AccountProvider
       .getInstance()
-      .getAccount(map[columnAccount])
-      .then((value) => account = value);
+      .getAccount(accountId);
   }
 }
 
