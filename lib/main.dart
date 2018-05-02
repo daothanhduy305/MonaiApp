@@ -92,46 +92,61 @@ class _MyHomePageState extends State<MyHomePage> {
         child: new Column(
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
-          children: initializing ? <Widget>[
-            new Text('Initializing...'),
-            // TODO: Add components to the container below
-          ] : <Widget>[],
+          children: initializing
+              ? <Widget>[
+                  new Text('Initializing...'),
+                  // TODO: Add components to the container below
+                ]
+              : <Widget>[],
         ),
       ),
-      floatingActionButton: initializing ? null : new Builder(
-        builder: (context) =>
-        new FloatingActionButton(
-          onPressed: () {
-            AccountProvider.getInstance().getAllAccounts().then((accountList) {
-              if (accountList.length == 0)
-                Scaffold.of(context).showSnackBar(new SnackBar(
-                  content: new Row(
-                    children: <Widget>[
-                      new Icon(Icons.error),
-                      new Container(
-                        child: new Text('You must at least 1 account'),
-                        margin: new EdgeInsets.only(left: 10.0),)
-                    ],
-                  ),
-                  duration: new Duration(seconds: 5),
-                  action: new SnackBarAction(label: 'Create', onPressed: () {
-                    Navigator.of(context).pushNamed("/account_manager");
-                  }),
-                ));
-              else
-                Navigator.of(context).pushNamed("/new_transaction");
-            });
-          },
-          tooltip: 'Increment',
-          child: new Icon(Icons.add),
-        )),
+      floatingActionButton: initializing
+          ? null
+          : new Builder(
+              builder: (context) => new FloatingActionButton(
+                    onPressed: () {
+                      AccountProvider
+                          .getInstance()
+                          .getAllAccounts()
+                          .then((accountList) {
+                        if (accountList.length == 0)
+                          Scaffold.of(context).showSnackBar(new SnackBar(
+                                content: new Row(
+                                  children: <Widget>[
+                                    new Icon(Icons.error),
+                                    new Container(
+                                      child: new Text(
+                                          'You must at least 1 account'),
+                                      margin: new EdgeInsets.only(left: 10.0),
+                                    )
+                                  ],
+                                ),
+                                duration: new Duration(seconds: 5),
+                                action: new SnackBarAction(
+                                    label: 'Create',
+                                    onPressed: () {
+                                      Navigator
+                                          .of(context)
+                                          .pushNamed("/account_manager");
+                                    }),
+                              ));
+                        else
+                          Navigator.of(context).pushNamed("/new_transaction");
+                      });
+                    },
+                    tooltip: 'Increment',
+                    child: new Icon(Icons.add),
+                  )),
       drawer: new Drawer(
         child: new Column(
           children: <Widget>[
-            new UserAccountsDrawerHeader(accountName: new Text('Testing user'),
+            new UserAccountsDrawerHeader(
+              accountName: new Text('Testing user'),
               accountEmail: new Text('email@gmail.com'),
-              margin: new EdgeInsets.only(bottom: 0.0),),
-            new Expanded(child: new ListView(
+              margin: new EdgeInsets.only(bottom: 0.0),
+            ),
+            new Expanded(
+                child: new ListView(
               padding: new EdgeInsets.only(top: 10.0),
               children: <Widget>[
                 new ListTile(

@@ -44,7 +44,7 @@ class Currency {
 class CurrencyProvider {
   // Singleton pattern
   static final CurrencyProvider _currencyProvider =
-  new CurrencyProvider._internal();
+      new CurrencyProvider._internal();
 
   CurrencyProvider._internal();
 
@@ -67,20 +67,16 @@ class CurrencyProvider {
 
   Future<Currency> getCurrencyById(int id) async {
     await open();
-    List<Map> maps = await database.query(
-      currencyTableName,
-      where: "$columnId = ?",
-      whereArgs: [id]);
+    List<Map> maps = await database
+        .query(currencyTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return maps.length > 0 ? new Currency.fromMap(maps.first) : null;
   }
 
   Future<Currency> getCurrencyByShortName(String shortName) async {
     await open();
-    List<Map> maps = await database.query(
-      currencyTableName,
-      where: "$columnShortName like ?",
-      whereArgs: [shortName]);
+    List<Map> maps = await database.query(currencyTableName,
+        where: "$columnShortName like ?", whereArgs: [shortName]);
     await close();
     return maps.length > 0 ? new Currency.fromMap(maps.first) : null;
   }
@@ -95,7 +91,7 @@ class CurrencyProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-      .delete(currencyTableName, where: "$columnId = ?", whereArgs: [id]);
+        .delete(currencyTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
@@ -103,7 +99,7 @@ class CurrencyProvider {
   Future<int> update(Currency currency) async {
     await open();
     var result = await database.update(currencyTableName, currency.toMap(),
-      where: "$columnId = ?", whereArgs: [currency.id]);
+        where: "$columnId = ?", whereArgs: [currency.id]);
     await close();
     return result;
   }

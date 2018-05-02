@@ -35,12 +35,12 @@ class TransactionCategory {
 class TransactionCategoryProvider {
   // Singleton pattern
   static final TransactionCategoryProvider _transactionCategoryProvider =
-  new TransactionCategoryProvider._internal();
+      new TransactionCategoryProvider._internal();
 
   TransactionCategoryProvider._internal();
 
   static TransactionCategoryProvider getInstance() =>
-    _transactionCategoryProvider;
+      _transactionCategoryProvider;
 
   Database database;
 
@@ -53,7 +53,7 @@ class TransactionCategoryProvider {
   Future<TransactionCategory> insert(TransactionCategory category) async {
     await open();
     category.id =
-    await database.insert(transactionCategoryTableName, category.toMap());
+        await database.insert(transactionCategoryTableName, category.toMap());
     await close();
     return category;
   }
@@ -61,9 +61,9 @@ class TransactionCategoryProvider {
   Future<TransactionCategory> getCategory(int id) async {
     await open();
     List<Map> maps = await database.query(transactionCategoryTableName,
-      columns: [columnId, columnName],
-      where: "$columnId = ?",
-      whereArgs: [id]);
+        columns: [columnId, columnName],
+        where: "$columnId = ?",
+        whereArgs: [id]);
     await close();
     return maps.length > 0 ? new TransactionCategory.fromMap(maps.first) : null;
   }
@@ -81,7 +81,7 @@ class TransactionCategoryProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database.delete(transactionCategoryTableName,
-      where: "$columnId = ?", whereArgs: [id]);
+        where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
@@ -89,8 +89,8 @@ class TransactionCategoryProvider {
   Future<int> update(TransactionCategory category) async {
     await open();
     var result = await database.update(
-      transactionCategoryTableName, category.toMap(),
-      where: "$columnId = ?", whereArgs: [category.id]);
+        transactionCategoryTableName, category.toMap(),
+        where: "$columnId = ?", whereArgs: [category.id]);
     await close();
     return result;
   }

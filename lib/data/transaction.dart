@@ -41,20 +41,17 @@ class Transaction {
   }
 
   Future postConstruct() async {
-    category = await TransactionCategoryProvider
-      .getInstance()
-      .getCategory(categoryId);
+    category =
+        await TransactionCategoryProvider.getInstance().getCategory(categoryId);
 
-    account = await AccountProvider
-      .getInstance()
-      .getAccount(accountId);
+    account = await AccountProvider.getInstance().getAccount(accountId);
   }
 }
 
 class TransactionProvider {
   // Singleton pattern
   static final TransactionProvider _transactionProvider =
-  new TransactionProvider._internal();
+      new TransactionProvider._internal();
 
   TransactionProvider._internal();
 
@@ -70,24 +67,25 @@ class TransactionProvider {
 
   Future<Transaction> insert(Transaction transaction) async {
     await open();
-    transaction.id = await database.insert(transactionTableName, transaction.toMap());
+    transaction.id =
+        await database.insert(transactionTableName, transaction.toMap());
     await close();
     return transaction;
   }
 
   Future<Transaction> getTransaction(int id) async {
     await open();
-    List<Map> maps = await database.query(
-      transactionTableName,
-      where: "$columnId = ?",
-      whereArgs: [id]);
+    List<Map> maps = await database
+        .query(transactionTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return maps.length > 0 ? new Transaction.fromMap(maps.first) : null;
   }
 
   Future<List<Transaction>> getAllCurrencies() async {
     await open();
-    List<Map> maps = await database.query(transactionTableName,);
+    List<Map> maps = await database.query(
+      transactionTableName,
+    );
     await close();
     return maps.map((map) => new Transaction.fromMap(map)).toList();
   }
@@ -95,15 +93,16 @@ class TransactionProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-      .delete(transactionTableName, where: "$columnId = ?", whereArgs: [id]);
+        .delete(transactionTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
 
   Future<int> update(Transaction transaction) async {
     await open();
-    var result = await database.update(transactionTableName, transaction.toMap(),
-      where: "$columnId = ?", whereArgs: [transaction.id]);
+    var result = await database.update(
+        transactionTableName, transaction.toMap(),
+        where: "$columnId = ?", whereArgs: [transaction.id]);
     await close();
     return result;
   }

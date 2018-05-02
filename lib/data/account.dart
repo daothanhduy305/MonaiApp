@@ -16,13 +16,12 @@ class Account {
   Currency currency;
   DateTime updatedDateTime, createdDateTime;
 
-  Account({
-    this.name,
-    this.initialBalance,
-    this.currentBalance,
-    this.accountCategory,
-    this.currency
-  }) {
+  Account(
+      {this.name,
+      this.initialBalance,
+      this.currentBalance,
+      this.accountCategory,
+      this.currency}) {
     var dateTime = new DateTime.now();
     this.createdDateTime = dateTime;
     this.updatedDateTime = dateTime;
@@ -56,16 +55,14 @@ class Account {
   }
 
   Future postConstruct() async {
-    currency = await CurrencyProvider
-      .getInstance()
-      .getCurrencyById(currencyId);
+    currency = await CurrencyProvider.getInstance().getCurrencyById(currencyId);
   }
 }
 
 class AccountProvider {
   // Singleton pattern
   static final AccountProvider _accountProvider =
-  new AccountProvider._internal();
+      new AccountProvider._internal();
 
   AccountProvider._internal();
 
@@ -88,10 +85,8 @@ class AccountProvider {
 
   Future<Account> getAccount(int id) async {
     await open();
-    List<Map> maps = await database.query(
-      accountTableName,
-      where: "$columnId = ?",
-      whereArgs: [id]);
+    List<Map> maps = await database
+        .query(accountTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return maps.length > 0 ? new Account.fromMap(maps.first) : null;
   }
@@ -106,7 +101,7 @@ class AccountProvider {
   Future<int> delete(int id) async {
     await open();
     var result = await database
-      .delete(accountTableName, where: "$columnId = ?", whereArgs: [id]);
+        .delete(accountTableName, where: "$columnId = ?", whereArgs: [id]);
     await close();
     return result;
   }
@@ -114,7 +109,7 @@ class AccountProvider {
   Future<int> update(Account account) async {
     await open();
     var result = await database.update(accountTableName, account.toMap(),
-      where: "$columnId = ?", whereArgs: [account.id]);
+        where: "$columnId = ?", whereArgs: [account.id]);
     await close();
     return result;
   }
