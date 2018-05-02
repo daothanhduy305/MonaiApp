@@ -13,15 +13,10 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
   void initState() {
     super.initState();
     currentAccounts = [];
-    AccountProvider
-        .getInstance()
-        .getAllAccounts()
-        .then((accountList) => accountList.forEach((account) async {
-              await account.postConstruct();
-              setState(() {
-                currentAccounts.add(account);
-              });
-            }));
+    AccountProvider.getInstance().getAllAccounts().then((accountList) =>
+        accountList.forEach((account) => account.postConstruct().then(
+            (updatedAccount) =>
+                setState(() => currentAccounts.add(updatedAccount)))));
   }
 
   @override
@@ -52,6 +47,6 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
         title: new Text(account.name),
         subtitle:
             new Text('${account.currentBalance.toString()} (${account.currency
-                .shortName})'),
+            .shortName})'),
       );
 }
