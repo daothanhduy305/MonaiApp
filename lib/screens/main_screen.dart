@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:monai/data/account.dart';
 import 'package:monai/data/database_helper.dart';
+import 'package:monai/screens/main_screen_fragments/transaction_manager_fragment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class TransactionManagerScreen extends StatefulWidget {
-  TransactionManagerScreen({Key key, this.title}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  MainScreen({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -18,12 +19,12 @@ class TransactionManagerScreen extends StatefulWidget {
   final String title;
 
   @override
-  TransactionManagerScreenState createState() =>
-      new TransactionManagerScreenState();
+  MainScreenState createState() => new MainScreenState();
 }
 
-class TransactionManagerScreenState extends State<TransactionManagerScreen> {
+class MainScreenState extends State<MainScreen> {
   bool initializing = true;
+  Widget currentFragment = new TransactionManagerFragment();
 
   @override
   void initState() {
@@ -53,20 +54,9 @@ class TransactionManagerScreenState extends State<TransactionManagerScreen> {
           },
         ),
       ),
-      body: new Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: new Column(
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: initializing
-              ? <Widget>[
-                  new Text('Initializing...'),
-                  // TODO: Add components to the container below
-                ]
-              : <Widget>[],
-        ),
-      ),
+      body: initializing
+          ? new Center(child: new Text('Initializing...'))
+          : currentFragment,
       floatingActionButton: initializing
           ? null
           : new Builder(
@@ -119,6 +109,13 @@ class TransactionManagerScreenState extends State<TransactionManagerScreen> {
                 new ListTile(
                   leading: new Icon(Icons.account_balance_wallet),
                   title: new Text('Transactions'),
+                  onTap: () {
+                    if (!(currentFragment is TransactionManagerFragment)) {
+                      setState(() =>
+                          currentFragment = new TransactionManagerFragment());
+                    }
+                    Navigator.of(context).pop();
+                  },
                 ),
                 new ListTile(
                   leading: new Icon(Icons.swap_vert),
