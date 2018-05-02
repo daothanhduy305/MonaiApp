@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     new Icon(Icons.error),
                                     new Container(
                                       child: new Text(
-                                          'You must at least 1 account'),
+                                          'You must have at least 1 account'),
                                       margin: new EdgeInsets.only(left: 10.0),
                                     )
                                   ],
