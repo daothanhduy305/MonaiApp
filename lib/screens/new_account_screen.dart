@@ -135,7 +135,9 @@ class NewAccountScreenState extends State<NewAccountScreen> {
         initialBalance: accountBalance.isEmpty
             ? 0.0
             : double.parse(accountBalance),
-        currentBalance: double.parse(accountBalance),
+        currentBalance: accountBalance.isEmpty
+            ? 0.0
+            : double.parse(accountBalance),
         accountCategory: accountCategory,
         currency: currentCurrency);
 
