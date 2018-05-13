@@ -54,8 +54,9 @@ class Account {
     currencyId = map[columnCurrency];
   }
 
-  Future postConstruct() async {
+  Future<Account> postConstruct() async {
     currency = await CurrencyProvider.getInstance().getCurrencyById(currencyId);
+    return this;
   }
 }
 
