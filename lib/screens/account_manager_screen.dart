@@ -59,5 +59,6 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
             )
           ],
         ),
+    onTap: () => Navigator.of(context).pop(account),
       );
 }

@@ -19,12 +19,13 @@ class MainScreen extends StatefulWidget {
   final String title;
 
   @override
-  MainScreenState createState() => new MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
 class MainScreenState extends State<MainScreen> {
   bool initializing = true;
-  Widget currentFragment = new TransactionManagerFragment();
+  Account currentAccount;
+  Widget currentFragment = TransactionManagerFragment();
 
   @override
   void initState() {
@@ -34,110 +35,99 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: new ListTile(
-          leading: new Icon(
+        title: ListTile(
+          leading: Icon(
             Icons.arrow_drop_down,
             color: Colors.white,
           ),
-          title: new Text(
-            // TODO: For now this is the app title
-            // In the future, this should be the amount of the current viewing account
-            widget.title,
-            style: new TextStyle(color: Colors.white, fontSize: 18.0),
+          title: Text(
+            currentAccount == null ? widget.title : currentAccount.name,
+            style: TextStyle(color: Colors.white, fontSize: 18.0),
           ),
-          onTap: () {
-            Navigator.of(context).pushNamed("/account_manager");
+          subtitle: currentAccount == null
+              ? null
+              : Text(
+                  '${currentAccount.currentBalance.toString()} '
+                      '${currentAccount.currency.shortName}',
+                  style: TextStyle(color: Colors.white70),
+                ),
+          onTap: () async {
+            Navigator
+                .of(context)
+                .pushNamed("/account_manager")
+                .then((resultAccount) async {
+              if (resultAccount != null) {
+                var updatedAccount =
+                    await (resultAccount as Account).postConstruct();
+                setState(() {
+                  currentAccount = updatedAccount;
+                });
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setInt('last_account', updatedAccount.id);
+              }
+            });
           },
         ),
       ),
       body: initializing
-          ? new Center(child: new Text('Initializing...'))
+          ? Center(child: Text('Initializing...'))
           : currentFragment,
       floatingActionButton: initializing
           ? null
-          : new Builder(
-              builder: (context) => new FloatingActionButton(
-                    onPressed: () {
-                      AccountProvider
-                          .getInstance()
-                          .getAllAccounts()
-                          .then((accountList) {
-                        if (accountList.length == 0)
-                          Scaffold.of(context).showSnackBar(new SnackBar(
-                                content: new Row(
-                                  children: <Widget>[
-                                    new Icon(Icons.error),
-                                    new Container(
-                                      child: new Text(
-                                          'You must have at least 1 account'),
-                                      margin: new EdgeInsets.only(left: 10.0),
-                                    )
-                                  ],
-                                ),
-                                duration: new Duration(seconds: 5),
-                                action: new SnackBarAction(
-                                    label: 'Create',
-                                    onPressed: () {
-                                      Navigator
-                                          .of(context)
-                                          .pushNamed("/account_manager");
-                                    }),
-                              ));
-                        else
-                          Navigator.of(context).pushNamed("/new_transaction");
-                      });
-                    },
-                    tooltip: 'Increment',
-                    child: new Icon(Icons.add),
+          : Builder(
+              builder: (context) => FloatingActionButton(
+                    onPressed: () => addNewTransaction(context),
+                    tooltip: 'transaction',
+                    child: Icon(Icons.add),
                   )),
-      drawer: new Drawer(
-        child: new Column(
+      drawer: Drawer(
+        child: Column(
           children: <Widget>[
-            new UserAccountsDrawerHeader(
-              accountName: new Text('Testing user'),
-              accountEmail: new Text('email@gmail.com'),
-              margin: new EdgeInsets.only(bottom: 0.0),
+            UserAccountsDrawerHeader(
+              accountName: Text('Testing user'),
+              accountEmail: Text('email@gmail.com'),
+              margin: EdgeInsets.only(bottom: 0.0),
             ),
-            new Expanded(
-                child: new ListView(
-              padding: new EdgeInsets.only(top: 10.0),
+            Expanded(
+                child: ListView(
+              padding: EdgeInsets.only(top: 10.0),
               children: <Widget>[
-                new ListTile(
-                  leading: new Icon(Icons.account_balance_wallet),
-                  title: new Text('Transactions'),
+                ListTile(
+                  leading: Icon(Icons.account_balance_wallet),
+                  title: Text('Transactions'),
                   onTap: () {
                     if (!(currentFragment is TransactionManagerFragment)) {
-                      setState(() =>
-                          currentFragment = new TransactionManagerFragment());
+                      setState(
+                          () => currentFragment = TransactionManagerFragment());
                     }
                     Navigator.of(context).pop();
                   },
                 ),
-                new ListTile(
-                  leading: new Icon(Icons.swap_vert),
-                  title: new Text('Debts'),
+                ListTile(
+                  leading: Icon(Icons.swap_vert),
+                  title: Text('Debts'),
                 ),
-                new Divider(),
-                new ListTile(
-                  leading: new Icon(Icons.monetization_on),
-                  title: new Text('Budgets'),
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.monetization_on),
+                  title: Text('Budgets'),
                 ),
-                new ListTile(
-                  leading: new Icon(Icons.shopping_basket),
-                  title: new Text('Savings'),
+                ListTile(
+                  leading: Icon(Icons.shopping_basket),
+                  title: Text('Savings'),
                 ),
-                new ListTile(
-                  leading: new Icon(Icons.assignment),
-                  title: new Text('Bills'),
+                ListTile(
+                  leading: Icon(Icons.assignment),
+                  title: Text('Bills'),
                 ),
-                new Divider(),
-                new ListTile(
-                  leading: new Icon(Icons.settings),
-                  title: new Text('Settings'),
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
                 ),
               ],
             ))
@@ -145,6 +135,31 @@ class MainScreenState extends State<MainScreen> {
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  void addNewTransaction(BuildContext context) {
+    AccountProvider.getInstance().getAllAccounts().then((accountList) {
+      if (accountList.length == 0)
+        Scaffold.of(context).showSnackBar(SnackBar(
+              content: Row(
+                children: <Widget>[
+                  Icon(Icons.error),
+                  Container(
+                    child: Text('You must have at least 1 account'),
+                    margin: EdgeInsets.only(left: 10.0),
+                  )
+                ],
+              ),
+              duration: Duration(seconds: 5),
+              action: SnackBarAction(
+                  label: 'Create',
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("/account_manager");
+                  }),
+            ));
+      else
+        Navigator.of(context).pushNamed("/new_transaction");
+    });
   }
 
   void initialize() async {
@@ -156,5 +171,18 @@ class MainScreenState extends State<MainScreen> {
       prefs.setBool('initialized', true);
       setState(() => initializing = false);
     }
+
+    // Try getting last account
+    int lastAccountId = prefs.getInt('last_account') ?? -1;
+    if (lastAccountId >= 0)
+      AccountProvider
+          .getInstance()
+          .getAccount(lastAccountId)
+          .then((account) async {
+        var updatedAccount = await account.postConstruct();
+        setState(() {
+          currentAccount = updatedAccount;
+        });
+      });
   }
 }
