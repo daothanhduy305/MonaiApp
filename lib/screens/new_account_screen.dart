@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:monai/data/account.dart';
 import 'package:monai/data/currency.dart';
+import 'package:monai/ebolo/utils/ebolo_snackbar_utils.dart';
 import 'package:monai/ebolo/widgets/ebolo_textfield.dart';
 
 class NewAccountScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new NewAccountScreenState();
+  State<StatefulWidget> createState() => NewAccountScreenState();
 }
 
 class NewAccountScreenState extends State<NewAccountScreen> {
@@ -21,48 +22,40 @@ class NewAccountScreenState extends State<NewAccountScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(
-          title: new Text('New Account'),
+  Widget build(BuildContext context) =>
+      Scaffold(
+        appBar: AppBar(
+          title: Text('Account'),
           actions: <Widget>[
-            new IconButton(
-                icon: new Icon(Icons.check),
-                onPressed: () {
-                  var account = new Account(
-                      name: accountName,
-                      initialBalance: double.parse(accountBalance),
-                      currentBalance: double.parse(accountBalance),
-                      accountCategory: accountCategory,
-                      currency: currentCurrency);
-
-                  AccountProvider
-                      .getInstance()
-                      .insert(account)
-                      .then((value) => Navigator.pop(context, value));
-                })
+            Builder(
+              builder: (context) => IconButton(
+                  icon: Icon(Icons.check),
+                  onPressed: () => createNewAccount(context)
+              ),
+            )
           ],
         ),
-        body: new ListView(
+        body: ListView(
           padding: EdgeInsets.only(top: 10.0),
           children: <Widget>[
-            new ListTile(
+            ListTile(
               title: textBox(
                 'Name',
                 keyboardType: TextInputType.text,
                 onChanged: (value) => accountName = value,
               ),
             ),
-            new ListTile(
+            ListTile(
               title: textBox(
                 'Category',
                 keyboardType: TextInputType.text,
                 onChanged: (value) => accountCategory = value,
               ),
             ),
-            new ListTile(
-              title: new Row(
+            ListTile(
+              title: Row(
                 children: <Widget>[
-                  new Expanded(
+                  Expanded(
                     child: textBox(
                       'Initial balance',
                       keyboardType: TextInputType.number,
@@ -70,51 +63,19 @@ class NewAccountScreenState extends State<NewAccountScreen> {
                       onChanged: (value) => accountBalance = value,
                     ),
                   ),
-                  new Padding(
-                    padding: new EdgeInsets.only(left: 10.0),
-                    child: new Builder(
-                        builder: (context) => new FlatButton(
-                              child: new Text(
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Builder(
+                        builder: (context) =>
+                            FlatButton(
+                              child: Text(
                                 currentCurrency == null
                                     ? 'Currency'
                                     : currentCurrency.shortName,
-                                style: new TextStyle(
+                                style: TextStyle(
                                     color: Colors.blue, fontSize: 18.0),
                               ),
-                              onPressed: () {
-                                CurrencyProvider
-                                    .getInstance()
-                                    .getAllCurrencies()
-                                    .then((currencies) => showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) => new Column(
-                                              children: <Widget>[
-                                                new Expanded(
-                                                  child: new ListView(
-                                                    padding:
-                                                        new EdgeInsets.only(
-                                                            top: 10.0),
-                                                    children: currencies
-                                                        .map((currency) =>
-                                                            new ListTile(
-                                                              title: new Text(
-                                                                  currency
-                                                                      .longName),
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  currentCurrency =
-                                                                      currency;
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                });
-                                                              },
-                                                            ))
-                                                        .toList(),
-                                                  ),
-                                                )
-                                              ],
-                                            )));
-                              },
+                              onPressed: showCurrencyList,
                             )),
                   )
                 ],
@@ -123,4 +84,64 @@ class NewAccountScreenState extends State<NewAccountScreen> {
           ],
         ),
       );
+
+  void showCurrencyList() =>
+      CurrencyProvider
+          .getInstance()
+          .getAllCurrencies()
+          .then((currencies) =>
+          showModalBottomSheet(
+              context: context,
+              builder: (context) =>
+                  Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: ListView(
+                          padding: EdgeInsets.only(top: 10.0),
+                          children: currencies
+                              .map((currency) =>
+                              getCurrencyListItemUI(currency))
+                              .toList(),
+                        ),
+                      )
+                    ],
+                  )));
+
+  Widget getCurrencyListItemUI(Currency currency) =>
+      ListTile(
+        title: Text(currency.longName),
+        onTap: () {
+          setState(() {
+            currentCurrency = currency;
+            Navigator.pop(context);
+          });
+        },
+      );
+
+  void createNewAccount(BuildContext context) {
+    // Check the data first
+    if (accountName.isEmpty) {
+      showErrorSnackbar(context, 'Acount name must be filled!');
+      return;
+    }
+
+    if (currentCurrency == null) {
+      showErrorSnackbar(context, 'Acount must have its own currency!');
+      return;
+    }
+
+    var account = Account(
+        name: accountName,
+        initialBalance: accountBalance.isEmpty
+            ? 0.0
+            : double.parse(accountBalance),
+        currentBalance: double.parse(accountBalance),
+        accountCategory: accountCategory,
+        currency: currentCurrency);
+
+    AccountProvider
+        .getInstance()
+        .insert(account)
+        .then((value) => Navigator.pop(context, value));
+  }
 }
