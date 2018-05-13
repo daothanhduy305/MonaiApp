@@ -3,7 +3,7 @@ import 'package:monai/data/account.dart';
 
 class AccountManagerScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new AccountManagerScreenState();
+  State<StatefulWidget> createState() => AccountManagerScreenState();
 }
 
 class AccountManagerScreenState extends State<AccountManagerScreen> {
@@ -20,19 +20,19 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Acount Manager'),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text('Acount Manager'),
         ),
-        floatingActionButton: new FloatingActionButton(
-          child: new Icon(Icons.add),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
           onPressed: () {
             Navigator.of(context).pushNamed("/new_account").then((result) {
               if (result != null) setState(() => currentAccounts.add(result));
             });
           },
         ),
-        body: new ListView(
+        body: ListView(
           children: ListTile
               .divideTiles(
                   context: context,
@@ -42,10 +42,10 @@ class AccountManagerScreenState extends State<AccountManagerScreen> {
         ),
       );
 
-  Widget buildAccountItemUI(Account account) => new ListTile(
-        leading: new Icon(Icons.monetization_on),
-        title: new Text(account.name),
-        subtitle: new Text('${account.currentBalance.toString()} '
+  Widget buildAccountItemUI(Account account) => ListTile(
+        leading: Icon(Icons.monetization_on),
+        title: Text(account.name),
+        subtitle: Text('${account.currentBalance.toString()} '
             '(${account.currency.shortName})'),
         trailing: Row(
           children: <Widget>[

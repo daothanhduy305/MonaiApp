@@ -5,15 +5,15 @@ import 'package:monai/screens/main_screen.dart';
 import 'package:monai/screens/new_account_screen.dart';
 import 'package:monai/screens/new_transaction_screen.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: APP_NAME,
-      theme: new ThemeData(
+      theme: ThemeData(
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -24,11 +24,11 @@ class MyApp extends StatelessWidget {
         // counter didn't reset back to zero; the application is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: new MainScreen(title: APP_NAME),
+      home: MainScreen(title: APP_NAME),
       routes: {
-        "/new_transaction": (context) => new NewTransactionScreen(),
-        "/account_manager": (context) => new AccountManagerScreen(),
-        "/new_account": (context) => new NewAccountScreen(),
+        "/new_transaction": (context) => NewTransactionScreen(),
+        "/account_manager": (context) => AccountManagerScreen(),
+        "/new_account": (context) => NewAccountScreen(),
       },
     );
   }

@@ -5,7 +5,7 @@ import 'package:monai/ebolo/widgets/ebolo_textfield.dart';
 
 class NewTransactionScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new NewTransactionScreenState();
+  State<StatefulWidget> createState() => NewTransactionScreenState();
 }
 
 class NewTransactionScreenState extends State<NewTransactionScreen> {
@@ -21,21 +21,21 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Add Transaction'),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text('Add Transaction'),
           actions: <Widget>[
-            new IconButton(icon: new Icon(Icons.check), onPressed: () {})
+            IconButton(icon: Icon(Icons.check), onPressed: () {})
           ],
         ),
-        body: new ListView(
+        body: ListView(
           padding: EdgeInsets.only(top: 10.0),
           children: <Widget>[
-            new ListTile(
-              leading: new Icon(Icons.monetization_on),
-              title: new Row(
+            ListTile(
+              leading: Icon(Icons.monetization_on),
+              title: Row(
                 children: <Widget>[
-                  new Expanded(
+                  Expanded(
                     child: textBox(
                       'Transaction amount',
                       keyboardType: TextInputType.number,
@@ -43,15 +43,15 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
                       onChanged: (value) => transactionAmount = value,
                     ),
                   ),
-                  new Padding(
-                    padding: new EdgeInsets.only(left: 10.0),
-                    child: new Builder(
-                        builder: (context) => new FlatButton(
-                              child: new Text(
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Builder(
+                        builder: (context) => FlatButton(
+                              child: Text(
                                 currentCurrency == null
                                     ? 'Currency'
                                     : currentCurrency.shortName,
-                                style: new TextStyle(
+                                style: TextStyle(
                                     color: Colors.blue, fontSize: 18.0),
                               ),
                               onPressed: showCurrencyList,
@@ -60,23 +60,23 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
                 ],
               ),
             ),
-            new ListTile(
-              leading: new Icon(Icons.category),
+            ListTile(
+              leading: Icon(Icons.category),
               title: textBox(
                 'Category',
                 keyboardType: TextInputType.text,
               ),
             ),
-            new ListTile(
-              leading: new Icon(Icons.edit),
+            ListTile(
+              leading: Icon(Icons.edit),
               title: textBox(
                 'Note',
                 keyboardType: TextInputType.text,
               ),
             ),
-            new ListTile(
-              leading: new Icon(Icons.date_range),
-              title: new Theme(data: new ThemeData(
+            ListTile(
+              leading: Icon(Icons.date_range),
+              title: Theme(data: ThemeData(
                   disabledColor: Colors.black54
               ), child: textBox(
                 'Date time',
@@ -84,9 +84,9 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
               )),
               onTap: () {},
             ),
-            new ListTile(
-              leading: new Icon(Icons.account_balance_wallet),
-              title: new Theme(data: new ThemeData(
+            ListTile(
+              leading: Icon(Icons.account_balance_wallet),
+              title: Theme(data: ThemeData(
                 disabledColor: Colors.black54
               ), child: textBox(
                 currentAccounts.length > 0
