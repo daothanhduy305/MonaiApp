@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monai/data/account.dart';
 import 'package:monai/data/currency.dart';
+import 'package:monai/ebolo/widgets/ebolo_textfield.dart';
 
 class NewTransactionScreen extends StatefulWidget {
   @override
@@ -28,17 +29,17 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
           ],
         ),
         body: new ListView(
+          padding: EdgeInsets.only(top: 10.0),
           children: <Widget>[
             new ListTile(
               leading: new Icon(Icons.monetization_on),
               title: new Row(
                 children: <Widget>[
                   new Expanded(
-                    child: new TextField(
+                    child: textBox(
+                      'Transaction amount',
                       keyboardType: TextInputType.number,
-                      decoration: new InputDecoration(
-                          hintText: currentCurrency == null ? '' : '0',
-                          labelText: 'Transaction amount'),
+                      hintText: currentCurrency == null ? '' : '0',
                       onChanged: (value) => transactionAmount = value,
                     ),
                   ),
@@ -53,40 +54,7 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
                                 style: new TextStyle(
                                     color: Colors.blue, fontSize: 18.0),
                               ),
-                              onPressed: () {
-                                CurrencyProvider
-                                    .getInstance()
-                                    .getAllCurrencies()
-                                    .then((currencies) => showModalBottomSheet(
-                                        context: context,
-                                        builder: (context) => new Column(
-                                              children: <Widget>[
-                                                new Expanded(
-                                                  child: new ListView(
-                                                    padding:
-                                                        new EdgeInsets.only(
-                                                            top: 10.0),
-                                                    children: currencies
-                                                        .map((currency) =>
-                                                            new ListTile(
-                                                              title: new Text(
-                                                                  currency
-                                                                      .longName),
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  currentCurrency =
-                                                                      currency;
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                });
-                                                              },
-                                                            ))
-                                                        .toList(),
-                                                  ),
-                                                )
-                                              ],
-                                            )));
-                              },
+                              onPressed: showCurrencyList,
                             )),
                   )
                 ],
@@ -94,25 +62,24 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
             ),
             new ListTile(
               leading: new Icon(Icons.category),
-              title: new TextField(
+              title: textBox(
+                'Category',
                 keyboardType: TextInputType.text,
-                decoration: new InputDecoration(hintText: 'Category'),
               ),
             ),
             new ListTile(
               leading: new Icon(Icons.edit),
-              title: new TextField(
+              title: textBox(
+                'Note',
                 keyboardType: TextInputType.text,
-                decoration: new InputDecoration(hintText: 'Note'),
               ),
             ),
             new ListTile(
               leading: new Icon(Icons.date_range),
               title: new Theme(data: new ThemeData(
                   disabledColor: Colors.black54
-              ), child: new TextField(
-                decoration: new InputDecoration(
-                    hintText: 'Date time'),
+              ), child: textBox(
+                'Date time',
                 enabled: false,
               )),
               onTap: () {},
@@ -121,16 +88,48 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
               leading: new Icon(Icons.account_balance_wallet),
               title: new Theme(data: new ThemeData(
                 disabledColor: Colors.black54
-              ), child: new TextField(
-                decoration: new InputDecoration(
-                    hintText: currentAccounts.length > 0
-                        ? currentAccounts[0].name
-                        : 'Account'),
+              ), child: textBox(
+                currentAccounts.length > 0
+                    ? currentAccounts[0].name
+                    : 'Account',
                 enabled: false,
               )),
               onTap: () {},
             ),
           ],
         ),
+      );
+
+  void showCurrencyList() =>
+      CurrencyProvider
+          .getInstance()
+          .getAllCurrencies()
+          .then((currencies) =>
+          showModalBottomSheet(
+              context: context,
+              builder: (context) =>
+                  Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: ListView(
+                          padding: EdgeInsets.only(top: 10.0),
+                          children: currencies
+                              .map((currency) =>
+                              getCurrencyListItemUI(currency))
+                              .toList(),
+                        ),
+                      )
+                    ],
+                  )));
+
+  Widget getCurrencyListItemUI(Currency currency) =>
+      ListTile(
+        title: Text(currency.longName),
+        onTap: () {
+          setState(() {
+            currentCurrency = currency;
+            Navigator.pop(context);
+          });
+        },
       );
 }
