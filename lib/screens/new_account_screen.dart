@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monai/data/account.dart';
 import 'package:monai/data/currency.dart';
+import 'package:monai/ebolo/widgets/ebolo_textfield.dart';
 
 class NewAccountScreen extends StatefulWidget {
   @override
@@ -42,18 +43,19 @@ class NewAccountScreenState extends State<NewAccountScreen> {
           ],
         ),
         body: new ListView(
+          padding: EdgeInsets.only(top: 10.0),
           children: <Widget>[
             new ListTile(
-              title: new TextField(
+              title: textBox(
+                'Name',
                 keyboardType: TextInputType.text,
-                decoration: new InputDecoration(labelText: 'Name'),
                 onChanged: (value) => accountName = value,
               ),
             ),
             new ListTile(
-              title: new TextField(
+              title: textBox(
+                'Category',
                 keyboardType: TextInputType.text,
-                decoration: new InputDecoration(labelText: 'Category'),
                 onChanged: (value) => accountCategory = value,
               ),
             ),
@@ -61,11 +63,10 @@ class NewAccountScreenState extends State<NewAccountScreen> {
               title: new Row(
                 children: <Widget>[
                   new Expanded(
-                    child: new TextField(
+                    child: textBox(
+                      'Initial balance',
                       keyboardType: TextInputType.number,
-                      decoration: new InputDecoration(
-                          hintText: currentCurrency == null ? '' : '0',
-                          labelText: 'Initial balance'),
+                      hintText: currentCurrency == null ? '' : '0',
                       onChanged: (value) => accountBalance = value,
                     ),
                   ),
