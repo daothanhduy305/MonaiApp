@@ -13,7 +13,9 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
   List<Account> currentAccounts = [];
   Currency currentCurrency;
   String transactionAmount = '0.0';
+  DateTime currentPickingDate;
   final DateFormat dateFormat = DateFormat("dd/MM/yyyy");
+  final today = new DateTime.now();
 
   @override
   void initState() {
@@ -78,54 +80,63 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
             ),
             ListTile(
               leading: Icon(Icons.date_range),
-              title: Theme(data: ThemeData(
-                  disabledColor: Colors.black54
-              ), child: textBox(
-                dateFormat.format(new DateTime.now()),
-                enabled: false,
-              )),
-              onTap: () {},
+              title: Theme(
+                  data: ThemeData(disabledColor: Colors.black54),
+                  child: textBox(
+                    dateFormat.format(currentPickingDate == null
+                        ? today
+                        : currentPickingDate),
+                    enabled: false,
+                  )),
+              onTap: () {
+                showDatePicker(
+                    context: context,
+                    initialDate:
+                        currentPickingDate == null ? today : currentPickingDate,
+                    firstDate: new DateTime(today.year - 10),
+                    lastDate: today).then((value) {
+                  if (value != null)
+                    setState(() {
+                      currentPickingDate = value;
+                    });
+                });
+              },
             ),
             ListTile(
               leading: Icon(Icons.account_balance_wallet),
-              title: Theme(data: ThemeData(
-                disabledColor: Colors.black54
-              ), child: textBox(
-                currentAccounts.length > 0
-                    ? currentAccounts[0].name
-                    : 'Account',
-                enabled: false,
-              )),
+              title: Theme(
+                  data: ThemeData(disabledColor: Colors.black54),
+                  child: textBox(
+                    currentAccounts.length > 0
+                        ? currentAccounts[0].name
+                        : 'Account',
+                    enabled: false,
+                  )),
               onTap: () {},
             ),
           ],
         ),
       );
 
-  void showCurrencyList() =>
-      CurrencyProvider
-          .getInstance()
-          .getAllCurrencies()
-          .then((currencies) =>
-          showModalBottomSheet(
-              context: context,
-              builder: (context) =>
-                  Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.only(top: 10.0),
-                          children: currencies
-                              .map((currency) =>
-                              getCurrencyListItemUI(currency))
-                              .toList(),
-                        ),
-                      )
-                    ],
-                  )));
+  void showCurrencyList() => CurrencyProvider
+      .getInstance()
+      .getAllCurrencies()
+      .then((currencies) => showModalBottomSheet(
+          context: context,
+          builder: (context) => Column(
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.only(top: 10.0),
+                      children: currencies
+                          .map((currency) => getCurrencyListItemUI(currency))
+                          .toList(),
+                    ),
+                  )
+                ],
+              )));
 
-  Widget getCurrencyListItemUI(Currency currency) =>
-      ListTile(
+  Widget getCurrencyListItemUI(Currency currency) => ListTile(
         title: Text(currency.longName),
         onTap: () {
           setState(() {
