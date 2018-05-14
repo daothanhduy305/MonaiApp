@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:monai/data/account.dart';
 import 'package:monai/data/currency.dart';
 import 'package:monai/ebolo/widgets/ebolo_textfield.dart';
@@ -12,6 +13,7 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
   List<Account> currentAccounts = [];
   Currency currentCurrency;
   String transactionAmount = '0.0';
+  final DateFormat dateFormat = DateFormat("dd/MM/yyyy");
 
   @override
   void initState() {
@@ -79,7 +81,7 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
               title: Theme(data: ThemeData(
                   disabledColor: Colors.black54
               ), child: textBox(
-                'Date time',
+                dateFormat.format(new DateTime.now()),
                 enabled: false,
               )),
               onTap: () {},
