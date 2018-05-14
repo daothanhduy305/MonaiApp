@@ -13,13 +13,14 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
   List<Account> currentAccounts = [];
   Currency currentCurrency;
   String transactionAmount = '0.0';
-  DateTime currentPickingDate;
   final DateFormat dateFormat = DateFormat("dd/MM/yyyy");
   final today = new DateTime.now();
+  DateTime currentPickingDate;
 
   @override
   void initState() {
     super.initState();
+    currentPickingDate = today;
     AccountProvider.getInstance().getAllAccounts().then(
         (accountList) => setState(() => currentAccounts.addAll(accountList)));
   }
@@ -83,16 +84,13 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
               title: Theme(
                   data: ThemeData(disabledColor: Colors.black54),
                   child: textBox(
-                    dateFormat.format(currentPickingDate == null
-                        ? today
-                        : currentPickingDate),
+                    dateFormat.format(currentPickingDate),
                     enabled: false,
                   )),
               onTap: () {
                 showDatePicker(
                     context: context,
-                    initialDate:
-                        currentPickingDate == null ? today : currentPickingDate,
+                    initialDate: currentPickingDate,
                     firstDate: new DateTime(today.year - 10),
                     lastDate: today).then((value) {
                   if (value != null)
