@@ -30,6 +30,7 @@ const columnNote = "note";
 const columnAmount = "amount";
 const columnCategory = "category";
 const columnAccount = "account";
+const columnIsIncome = "is_income";
 
 const String transactionCategoryTableName = "transaction_categories";
 

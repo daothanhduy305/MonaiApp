@@ -15,6 +15,7 @@ class Transaction {
   DateTime dateTime;
   String note;
   double amount;
+  bool isIncome;
   TransactionCategory category;
 
   Map<String, dynamic> toMap() {
@@ -24,6 +25,7 @@ class Transaction {
       columnCreatedDateTime: dateTime.toIso8601String(),
       columnCategory: category.id,
       columnAccount: account.id,
+      columnIsIncome: isIncome
     };
 
     if (id != null) returningMap[columnId] = id;
@@ -38,6 +40,7 @@ class Transaction {
     dateTime = DateTime.parse(map[columnCreatedDateTime]);
     accountId = map[columnAccount];
     categoryId = map[columnCategory];
+    isIncome = map[columnIsIncome];
   }
 
   Future postConstruct() async {
@@ -81,10 +84,32 @@ class TransactionProvider {
     return maps.length > 0 ? new Transaction.fromMap(maps.first) : null;
   }
 
-  Future<List<Transaction>> getAllCurrencies() async {
+  Future<List<Transaction>> getAllTransactions() async {
     await open();
     List<Map> maps = await database.query(
       transactionTableName,
+    );
+    await close();
+    return maps.map((map) => new Transaction.fromMap(map)).toList();
+  }
+
+  Future<List<Transaction>> getIncomeTransactions() async {
+    await open();
+    List<Map> maps = await database.query(
+      transactionTableName,
+      where: "$columnIsIncome = ?",
+      whereArgs: [1]
+    );
+    await close();
+    return maps.map((map) => new Transaction.fromMap(map)).toList();
+  }
+
+  Future<List<Transaction>> getOutcomeTransactions() async {
+    await open();
+    List<Map> maps = await database.query(
+        transactionTableName,
+        where: "$columnIsIncome = ?",
+        whereArgs: [0]
     );
     await close();
     return maps.map((map) => new Transaction.fromMap(map)).toList();
