@@ -14,7 +14,7 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
   Currency currentCurrency;
   String transactionAmount = '0.0';
   final DateFormat dateFormat = DateFormat("dd/MM/yyyy");
-  final today = new DateTime.now();
+  final today = DateTime.now();
   DateTime currentPickingDate;
 
   @override
@@ -91,7 +91,7 @@ class NewTransactionScreenState extends State<NewTransactionScreen> {
                 showDatePicker(
                     context: context,
                     initialDate: currentPickingDate,
-                    firstDate: new DateTime(today.year - 10),
+                    firstDate: DateTime(today.year - 10),
                     lastDate: today).then((value) {
                   if (value != null)
                     setState(() {
